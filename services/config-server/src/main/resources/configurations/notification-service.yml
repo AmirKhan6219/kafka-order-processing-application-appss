@@ -1,0 +1,21 @@
+spring:
+  datasource:
+    url: jdbc:mysql://mysql-service:3306/notifications
+    username: root
+    password: root
+    driver-class-name: com.mysql.cj.jdbc.Driver
+  jpa:
+    hibernate:
+      ddl-auto: update
+  kafka:
+    consumer:
+      bootstrap-servers: kraft-kafka:9092
+      auto-offset-reset: earliest
+      key-deserializer: org.apache.kafka.common.serialization.StringDeserializer
+      value-deserializer: org.springframework.kafka.support.serializer.JsonDeserializer
+      properties:
+        spring.json.trusted.packages: '*'
+        spring.json.type.mapping: orderConfirmation:com.shoponline.notification.dto.OrderConfirmation,paymentConfirmation:com.shoponline.notification.dto.PaymentConfirmation
+
+server:
+  port: 8096

@@ -1,0 +1,28 @@
+server:
+  port: 8222
+
+spring:
+  cloud:
+    gateway:
+      routes:
+        - id: customer-service
+          uri: http://customer-service:8095
+          predicates:
+            - Path=/api/v1/customers/**
+        - id: order-service
+          uri: http://order-service:8091
+          predicates:
+            - Path=/api/v1/orders/**
+        - id: order-lines-service
+          uri: http://order-service:8091
+          predicates:
+            - Path=/api/v1/order-lines/**
+        - id: product-service
+          uri: http://product-service:8092
+          predicates:
+            - Path=/api/v1/products/**
+        - id: payment-service
+          uri: http://payment-service:8093
+          predicates:
+            - Path=/api/v1/payments/**
+

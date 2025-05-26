@@ -1,0 +1,7 @@
+spring:
+  config:
+    import: optional:configserver:http://config-server:8888
+  application:
+    name: order-service
+  kafka:
+    bootstrap-servers: kraft-kafka:9092

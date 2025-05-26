@@ -1,0 +1,37 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: kraft-kafka
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: kraft-kafka
+  template:
+    metadata:
+      labels:
+        app: kraft-kafka
+    spec:
+      initContainers:
+        - name: fix-permissions
+          image: busybox
+          command: [ "sh", "-c", "chown -R 1001:1001 /bitnami/kafka" ]
+          volumeMounts:
+            - name: kafka-data
+              mountPath: /bitnami/kafka
+      containers:
+        - name: kafka
+          image: bitnami/kafka:4.0.0
+          ports:
+            - containerPort: 9092
+            - containerPort: 9093
+          envFrom:
+            - configMapRef:
+                name: kafka-config
+          volumeMounts:
+            - name: kafka-data
+              mountPath: /bitnami/kafka
+      volumes:
+        - name: kafka-data
+          persistentVolumeClaim:
+            claimName: kafka-pvc

@@ -1,0 +1,37 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: order-service
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: order-service
+  template:
+    metadata:
+      labels:
+        app: order-service
+    spec:
+      containers:
+        - name: order-service
+          image: amirkhan20121999/order-service:latest
+          ports:
+            - containerPort: 8091
+          env:
+            - name: SPRING_DATASOURCE_URL
+              value: jdbc:mysql://mysql-service:3306/orders
+            - name: SPRING_DATASOURCE_USERNAME
+              value: root
+            - name: SPRING_DATASOURCE_PASSWORD
+              value: root
+            - name: SPRING_CONFIG_IMPORT
+              value: optional:configserver:http://config-server:8888
+            - name: APPLICATION_CONFIG_CUSTOMER_URL
+              value: http://customer-service:8095/api/v1/customers
+            - name: APPLICATION_CONFIG_PAYMENT_URL
+              value: http://payment-service:8093/api/v1/payments
+            - name: APPLICATION_CONFIG_PRODUCT_URL
+              value: http://product-service:8092/api/v1/products
+            - name: SPRING_KAFKA_PRODUCER_BOOTSTRAP_SERVERS
+              value: kraft-kafka:9092
+
